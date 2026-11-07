@@ -4,7 +4,7 @@ Chat page for the Streamlit application.
 
 import streamlit as st
 
-from streamlit_app.utils.api_client import query_backend, document_upload_rag
+from utils.api_client import query_backend, document_upload_rag
 
 # Configure page settings
 st.set_page_config(
@@ -94,7 +94,7 @@ user_input = st.chat_input("Ask a question...")
 # Process user input and get response
 if user_input:
     st.session_state.chat_history.append(("user", user_input))
-    response = query_backend(user_input, st.session_state["jwt_token"])
+    response = query_backend(user_input, st.session_state["session_id"])
     st.session_state.chat_history.append(("assistant", response))
     st.rerun()  # Rerun script to display updated messages
 

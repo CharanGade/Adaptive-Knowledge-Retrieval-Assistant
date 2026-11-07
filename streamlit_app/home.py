@@ -3,10 +3,13 @@ Home page for Streamlit authentication interface.
 """
 
 import logging
+from uuid import uuid4
 
 import streamlit as st
 
 from utils.api_client import create_user, login_user, get_api_token
+
+st.set_page_config(page_title="LangGraph Chat - Login")
 
 # Hide sidebar for cleaner look
 hide_sidebar_style = """
@@ -27,9 +30,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-st.set_page_config(page_title="LangGraph Chat - Login")
-
 st.title("🔐 Welcome to LangGraph Assistant")
+
+if st.button("Continue without account"):
+    st.session_state["session_id"] = str(uuid4())
+    st.switch_page("pages/chat.py")
 
 token = ""
 
@@ -40,7 +45,7 @@ if "session_id" not in st.session_state:
         st.session_state["session_id"] = token
         st.success("API token initialized.")
     else:
-        st.error("Failed to initialize API token.")
+        st.info("Authentication service is unavailable. You can continue with a local session.")
         st.stop()
 
 # Step 2: Render login/signup form

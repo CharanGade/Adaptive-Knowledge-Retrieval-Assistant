@@ -8,7 +8,7 @@ from langchain_core.prompts import PromptTemplate
 from langgraph.constants import START, END
 from langgraph.graph.state import StateGraph
 
-from src.rag.reAct_agent import agent_executor
+from src.rag.reAct_agent import create_agent_executor
 from src.rag.retriever_setup import get_retriever
 from src.config.settings import Config
 from src.llms.openai import llm
@@ -37,7 +37,10 @@ def query_classifier(state: State):
     print("docs received from Qdrant")
     print(context)
 
-    llm_with_structured_output = llm.with_structured_output(RouteIdentifier)
+    llm_with_structured_output = llm.with_structured_output(
+        RouteIdentifier,
+        method="json_mode",
+    )
     classify_prompt = PromptTemplate(
         template=config.prompt("classify_prompt"),
         input_variables=["question", "context"]
@@ -77,7 +80,7 @@ def retriever_node(state: State):
         dict: Updated messages with tool calls.
     """
     messages = state["latest_query"]
-    result = agent_executor.invoke({"input": messages})
+    result = create_agent_executor().invoke({"input": messages})
 
     # Extract tool calls
     intermediate_steps = result.get("intermediate_steps", [])
@@ -116,7 +119,7 @@ def grade(state: State):
     context = state["messages"][-1].content
     question = state["latest_query"]
 
-    llm_with_grade = llm.with_structured_output(Grade)
+    llm_with_grade = llm.with_structured_output(Grade, method="json_mode")
 
     chain_graded = grading_prompt | llm_with_grade
     result = chain_graded.invoke({"question": question, "context": context})

@@ -96,7 +96,12 @@ def get_api_token() -> str:
     Returns:
         API token string if successful, None otherwise.
     """
-    response = requests.post(f"{RUST_BASE_URL}/init")
+    try:
+        response = requests.post(f"{RUST_BASE_URL}/init")
+    except requests.RequestException as e:
+        logger.warning("Authentication service is unavailable: %s", e)
+        return None
+
     logger.info("Calling /init, status code: %s", response.json())
 
     if response.status_code == 200:

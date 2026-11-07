@@ -307,7 +307,9 @@ from functools import lru_cache
 @lru_cache(maxsize=128)
 def get_embedding_model():
     """Get embedding model (cached)."""
-    return OpenAIEmbeddings()
+    return HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
 ```
 
 ## Code Review Checklist

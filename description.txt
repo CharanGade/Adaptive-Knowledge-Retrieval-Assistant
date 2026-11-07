@@ -1,1 +1,2 @@
-This tool is designed solely for answering questions related to the content of your uploaded resume. Please use it to inquire specifically about the details and information contained within your document.
+**Tool Instruction**  
+This retriever tool is dedicated solely to the uploaded document, which is the user's resume. It may only be used to answer questions that directly pertain to the content of that resume. No other topics or external information should be addressed.

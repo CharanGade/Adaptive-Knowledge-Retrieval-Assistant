@@ -125,7 +125,7 @@ AdaptiveRag/
 │   ├── db/                           # Database layer
 │   │   └── mongo_client.py           # MongoDB client initialization
 │   ├── llms/                         # Language model integrations
-│   │   └── openai.py                 # OpenAI ChatGPT-4o initialization
+│   │   └── openai.py                 # Groq chat model initialization
 │   ├── memory/                       # Chat memory management
 │   │   ├── chat_history_mongo.py     # MongoDB-backed chat history
 │   │   └── chathistory_in_memory.py  # In-memory chat history (fallback)
@@ -249,7 +249,8 @@ Form Data:
 - Python 3.9 or higher
 - MongoDB (local or cloud)
 - Qdrant vector database
-- OpenAI API key
+- Groq API key
+- Internet access for the first Hugging Face model download
 - Tavily API key (for web search)
 ```
 
@@ -273,8 +274,10 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```env
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key_here
+# Groq chat model configuration
+GROQ_API_KEY=your_groq_api_key_here
+
+# Embeddings use sentence-transformers/all-MiniLM-L6-v2 locally; no API key required
 
 # Tavily Search Configuration
 TAVILY_API_KEY=your_tavily_api_key_here
@@ -357,7 +360,8 @@ print(response.json())
 #### `config/settings.py`
 ```python
 # Core application settings loaded from environment
-OPENAI_API_KEY           # OpenAI API authentication
+GROQ_API_KEY             # Groq chat API authentication
+                         # Embeddings run locally with Hugging Face all-MiniLM-L6-v2
 TAVILY_API_KEY          # Web search functionality
 QDRANT_URL              # Vector database endpoint
 QDRANT_API_KEY          # Vector database authentication
@@ -496,7 +500,8 @@ Contributions are welcome! Please follow these steps:
 | **Vector Database** | Qdrant/FAISS | Latest |
 | **Chat Database** | MongoDB/InMemory | Latest |
 | **Document Processing** | LangChain Community | ~0.3.27 |
-| **LLM Provider** | OpenAI | ~0.3.28 |
+| **Chat Model Provider** | Groq | langchain-groq |
+| **Embeddings** | Hugging Face Sentence Transformers | all-MiniLM-L6-v2 |
 | **Web Search** | Tavily | Latest |
 | **Async DB** | Motor | Latest |
 | **Data Validation** | Pydantic | ~2.11.7 |
@@ -522,7 +527,7 @@ A: Upload one document at a time through the Streamlit interface. Each upload cr
 A: Limited by system memory and Qdrant storage. Typical limit is 100MB per file.
 
 **Q: Can I use different LLM providers?**  
-A: Currently configured for OpenAI. You can modify `src/llms/openai.py` to use other providers.
+A: Chat uses Groq, while document embeddings use the local Hugging Face `all-MiniLM-L6-v2` model.
 
 **Q: How is conversation history stored?**  
 A: MongoDB stores all chat messages with timestamps and session IDs for full context retention.
@@ -545,7 +550,8 @@ For issues, questions, or suggestions:
 
 - Built with LangChain and LangGraph
 - Vector search powered by Qdrant
-- LLM capabilities by OpenAI
+- Chat completions by Groq
+- Local embeddings by Hugging Face Sentence Transformers
 - Web search by Tavily
 - UI powered by Streamlit
 - Thanks to the open-source community

@@ -1,16 +1,8 @@
 prompts:
   system_prompt: |
     You are a helpful AI agent.
-    You MUST use tools to answer the question. Never answer directly.
-    Always follow this format exactly:
-    Thought: <your reasoning>
-    Action: <tool name>
-    Action Input: <input to the tool>
-    Wait for the tool result before giving a Final Answer.
-    Final Answer: <your answer based on tool result>
-    Available tools:
-    {tools}
-    Tool names: {tool_names}
+    Use the provided document retrieval tool to answer questions about uploaded documents.
+    Base answers on retrieved content and say when it does not contain the answer.
 
   classify_prompt: |
     You are a strict query classifier.
@@ -30,6 +22,8 @@ prompts:
     - If context is NOT relevant:
         * If it’s a casual conversation or a question that can be answered using general world knowledge, choose "general".
         * Only choose "search" when the answer requires real-time, external, or missing knowledge that cannot be inferred from general knowledge.
+
+      Return a JSON object with exactly one key named route and a value of index, general, or search.
     
     ---
     Question: {question}
@@ -43,6 +37,7 @@ prompts:
     context: {context}
     You will be accessing the context with the question.
     If relevant, return "yes", otherwise "no". Return only 'yes' or 'no'.
+    Return a JSON object with one key named binary_score and a value of yes or no.
 
   rewrite_prompt: |
     You will be rewriting the query that the user asked. 
@@ -66,4 +61,4 @@ prompts:
     final answer: {final_answer}
     Is every part of the final answer supported by the retrieved context? 
     If yes, faithful=true. If not, faithful=false.
-    Provide a short explanation.
+    Provide a short explanation. Return a JSON object with faithful and explanation fields.

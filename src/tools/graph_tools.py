@@ -71,7 +71,10 @@ def verify_answer(state: State) -> Literal["__end__", "generate"]:
         template=config.prompt("verify_prompt"),
         input_variables=["question", "context", "final_answer"]
     )
-    llm_with_verification = llm.with_structured_output(VerificationResult)
+    llm_with_verification = llm.with_structured_output(
+        VerificationResult,
+        method="json_mode",
+    )
 
     verify_chain = verify_prompt | llm_with_verification
 

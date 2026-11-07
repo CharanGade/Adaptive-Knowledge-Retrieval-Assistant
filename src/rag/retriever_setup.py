@@ -6,13 +6,15 @@ import os
 
 from langchain_core.documents import Document
 from langchain_core.tools import create_retriever_tool
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 # from langchain_qdrant import QdrantVectorStore
 from langchain_community.vectorstores import FAISS
 
 from src.core.config import settings
 
-embeddings = OpenAIEmbeddings()
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
 # Global variable to store the FAISS vectorstore instance
 # This ensures get_retriever() can access documents stored by retriever_chain()
